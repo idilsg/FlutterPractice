@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:yt_demo/models/category_model.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<CategoryModel> categories = [];
+
+  void _getCategories() {
+   categories = CategoryModel.getCategories();
+  }
+
+  @override
+  void initState() {
+    _getCategories();
+  }
+  
 
   @override
   Widget build(BuildContext context) {
+    _getCategories();
     return Scaffold(
       appBar: appBar(),
       backgroundColor: Colors.white,
@@ -30,9 +49,51 @@ class HomePage extends StatelessWidget {
               ),
               SizedBox(height: 15,), //Category'nin altında boşluk kalması için
               Container(
-                height: 150,
-                color: Colors.green,
-              )
+                height: 120,
+                child: ListView.separated(
+                  itemCount: categories.length,
+                  scrollDirection: Axis.horizontal, //bunu yapmazsan renkler yatay sıralanır
+                  padding: EdgeInsets.only(
+                    left: 20,
+                    right: 20
+                  ),
+                  separatorBuilder: (context, index) => SizedBox(width: 25,),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: categories[index].boxColor.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(16)
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly, //yazı ve yuvarlak eşit aralıklı dursun diye
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(9.0),
+                              child: SvgPicture.asset(categories[index].iconPath),
+                            )
+                          ),
+                          Text(
+                            categories[index].name,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                              fontSize: 13
+                            ) 
+                          )
+                        ],
+                      )
+                    );
+                  }
+                ),
+              ),
             ],
           ),
         ],
@@ -121,10 +182,8 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.white,
       elevation: 0.0,
       centerTitle: true,
-
       leading: GestureDetector(
         onTap: (){
-            
         },
         child:Container(
           margin: EdgeInsets.all(10), //container'in boyutu
@@ -140,11 +199,9 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-
       actions: [
         GestureDetector(
           onTap: (){
-
           },
           child: Container(
             margin: EdgeInsets.all(10), //container'in boyutu
