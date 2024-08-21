@@ -1,109 +1,204 @@
+// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: sort_child_properties_last
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yt_demo/models/category_model.dart';
+import 'package:yt_demo/models/diet_model.dart';
 
-class HomePage extends StatefulWidget {
+// ignore: must_be_immutable
+class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   List<CategoryModel> categories = [];
+  List<DietModel> diets = [];
 
-  void _getCategories() {
-   categories = CategoryModel.getCategories();
+  void _getInitialInfo() {
+    categories = CategoryModel.getCategories();
+    diets = DietModel.getDiets();
   }
-
-  @override
-  void initState() {
-    _getCategories();
-  }
-  
 
   @override
   Widget build(BuildContext context) {
-    _getCategories();
+    _getInitialInfo();
     return Scaffold(
       appBar: appBar(),
       backgroundColor: Colors.white,
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, //Category yazısı satır başında olsun diye
+        crossAxisAlignment: CrossAxisAlignment.start, //yazılar satır başında olsun diye
         children: [
           _searchField(),
-          SizedBox(height: 40,),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20), //solda biraz boşluk kalması için
-                child: Text(
-                  'Category',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600
-                  )
-                ),
-              ),
-              SizedBox(height: 15,), //Category'nin altında boşluk kalması için
-              Container(
-                height: 120,
-                child: ListView.separated(
-                  itemCount: categories.length,
-                  scrollDirection: Axis.horizontal, //bunu yapmazsan renkler yatay sıralanır
-                  padding: EdgeInsets.only(
-                    left: 20,
-                    right: 20
-                  ),
-                  separatorBuilder: (context, index) => SizedBox(width: 25,),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: categories[index].boxColor.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(16)
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly, //yazı ve yuvarlak eşit aralıklı dursun diye
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(9.0),
-                              child: SvgPicture.asset(categories[index].iconPath),
-                            )
-                          ),
-                          Text(
-                            categories[index].name,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
-                              fontSize: 13
-                            ) 
-                          )
-                        ],
-                      )
-                    );
-                  }
-                ),
-              ),
-            ],
-          ),
+          SizedBox(height: 20,),
+          _categoriesSection(),
+          SizedBox(height: 15,),
+          _dietSection()
         ],
       ),
     );
   }
 
+  Column _dietSection() {
+    return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                'Recommendation\nfor Diet',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600
+                )
+              ),
+            ),
+            SizedBox(height: 7,),
+            Container(
+              height: 220,
+              child: ListView.separated(
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: 190,
+                    decoration: BoxDecoration(
+                      color: diets[index].boxColor.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SvgPicture.asset(
+                          diets[index].iconPath,
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              diets[index].name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: 14
+                              )
+                            ),
+                            Text(
+                              diets[index].level + ' | ' + diets[index].duration + ' | ' + diets[index].calorie,
+                              style: TextStyle(
+                                color: Color(0xff7B6F72),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w400
+                              )
+                            ),
+                          ]
+                        ),
+                        Container(
+                          height: 45,
+                          width: 130,
+                          child: Center(
+                            child: Text(
+                              'View',
+                              style: TextStyle(
+                                color: diets[index].viewIsSelected ? Colors.white : Color(0xffC5BBF2),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13
+                              )
+                            )
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                diets[index].viewIsSelected ? Color(0xff9DCEFF) : Colors.transparent,
+                                diets[index].viewIsSelected ? Color(0xff92A3FD) : Colors.transparent,
+                              ]
+                            ),
+                            borderRadius: BorderRadius.circular(50)
+                          ),
+                        )
+                      ],
+                    )
+                  );
+                }, 
+                separatorBuilder: (context, index) => SizedBox(width: 25,), 
+                itemCount: diets.length,
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.only(left:20, right:20),
+              )
+            )
+          ],
+        );
+  }
+
+  Column _categoriesSection() {
+    return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20), //solda biraz boşluk kalması için
+              child: Text(
+                'Category',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600
+                )
+              ),
+            ),
+            SizedBox(height: 7,), //Category'nin altında boşluk kalması için
+            Container(
+              height: 115,
+              child: ListView.separated(
+                itemCount: categories.length,
+                scrollDirection: Axis.horizontal, //bunu yapmazsan renkler yatay sıralanır
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                ),
+                separatorBuilder: (context, index) => SizedBox(width: 25,),
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: categories[index].boxColor.withOpacity(0.4),
+                      borderRadius: BorderRadius.circular(16)
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly, //yazı ve yuvarlak eşit aralıklı dursun diye
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(9.0),
+                            child: SvgPicture.asset(categories[index].iconPath),
+                          )
+                        ),
+                        Text(
+                          categories[index].name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 13
+                          ) 
+                        )
+                      ],
+                    )
+                  );
+                }
+              ),
+            ),
+          ],
+        );
+  }
+
   Container _searchField() {
     return Container(
-          margin: EdgeInsets.only(top: 40, left: 20, right: 20),
+          margin: EdgeInsets.only(top: 10, left: 20, right: 20),
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow( //arama kutucuğunun gölgesi
@@ -117,7 +212,7 @@ class _HomePageState extends State<HomePage> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              contentPadding: EdgeInsets.all(15),
+              contentPadding: EdgeInsets.all(10),
               hintText: 'Search Pancake',
               hintStyle: TextStyle(
                 color: Color(0xffDDDADA),
