@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:yt_demo/models/category_model.dart';
 import 'package:yt_demo/models/diet_model.dart';
+import 'package:yt_demo/models/popular_model.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatelessWidget {
@@ -13,10 +14,12 @@ class HomePage extends StatelessWidget {
 
   List<CategoryModel> categories = [];
   List<DietModel> diets = [];
+  List<PopularDietsModel> popularDiets = [];
 
   void _getInitialInfo() {
     categories = CategoryModel.getCategories();
     diets = DietModel.getDiets();
+    popularDiets = PopularDietsModel.getPopularDiets();
   }
 
   @override
@@ -25,14 +28,60 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: appBar(),
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, //yazılar satır başında olsun diye
+      body: ListView(
         children: [
           _searchField(),
-          SizedBox(height: 20,),
+          SizedBox(height: 30,),
           _categoriesSection(),
-          SizedBox(height: 15,),
-          _dietSection()
+          SizedBox(height: 20,),
+          _dietSection(),
+          SizedBox(height: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  'Popular',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600
+                  )
+                )
+              ),
+              SizedBox(height: 15,),
+              ListView.separated(
+                itemCount: popularDiets.length,
+                shrinkWrap: true,
+                separatorBuilder: (context, index) => SizedBox(height: 25,),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 100, 
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(popularDiets[index].iconPath)
+                      ],
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xff1D1617).withOpacity(0.07),
+                          offset: Offset(0, 10),
+                          blurRadius: 40,
+                          spreadRadius: 0
+                        )
+                      ]
+                    ),
+                  );
+                }
+              )
+            ],
+          ),
+          SizedBox(height: 40,),
         ],
       ),
     );
