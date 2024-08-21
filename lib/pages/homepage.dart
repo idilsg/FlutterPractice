@@ -8,45 +8,83 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
+      backgroundColor: Colors.white,
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, //Category yazısı satır başında olsun diye
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 40, left: 20, right: 20),
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow( //arama kutucuğunun gölgesi
-                  color: Color(0xff1D1617).withOpacity(0.11),
-                  blurRadius: 40,
-                  spreadRadius: 0.0,
-                )
-              ]
-            ),
-            child: TextField( //arama kısmı
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: EdgeInsets.all(15),
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: SvgPicture.asset(
-                    'assets/icons/search.svg',
-                    width: 20,
-                    height: 20,
-                    colorFilter: ColorFilter.mode( //icon rengini açmak için
-                      Colors.grey.shade600,
-                      BlendMode.srcIn,),
-                  ),
+          _searchField(),
+          SizedBox(height: 40,),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20), //solda biraz boşluk kalması için
+                child: Text(
+                  'Category',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600
+                  )
                 ),
-                suffixIcon: IntrinsicHeight(
+              ),
+              SizedBox(height: 15,), //Category'nin altında boşluk kalması için
+              Container(
+                height: 150,
+                color: Colors.green,
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _searchField() {
+    return Container(
+          margin: EdgeInsets.only(top: 40, left: 20, right: 20),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow( //arama kutucuğunun gölgesi
+                color: Color(0xff1D1617).withOpacity(0.11),
+                blurRadius: 40,
+                spreadRadius: 0.0,
+              )
+            ]
+          ),
+          child: TextField( //arama kısmı
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: EdgeInsets.all(15),
+              hintText: 'Search Pancake',
+              hintStyle: TextStyle(
+                color: Color(0xffDDDADA),
+                fontSize: 14
+              ),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.all(12),
+                child: SvgPicture.asset(
+                  'assets/icons/search.svg',
+                  width: 20,
+                  height: 20,
+                  colorFilter: ColorFilter.mode( //icon rengini açmak için
+                    Colors.grey.shade600,
+                    BlendMode.srcIn,),
+                ),
+              ),
+              suffixIcon: Container(
+                width: 100,
+                child: IntrinsicHeight(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       VerticalDivider(
                         color: Colors.black,
-                        indent: 10,
-                        endIndent: 10,
-                        thickness: 0.2,
-                        width: 0.5,
+                        indent: 10, //yukarıdan boşluk bırakmak için
+                        endIndent: 10, //aşağıdan boşluk bırakmak için
+                        thickness: 0.2, //kalınlığı
+                        width: 0.5, //sağa biraz daha yaklaşması için (opsiyonel)
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
@@ -60,16 +98,14 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none
-                )
               ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide.none
+              )
             ),
-          )
-        ],
-      ),
-    );
+          ),
+        );
   }
 
   AppBar appBar() {
