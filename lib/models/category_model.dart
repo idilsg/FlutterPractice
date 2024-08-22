@@ -24,7 +24,7 @@ class CategoryModel {
 
     categories.add(
       CategoryModel(
-        name: 'Oat Bowl', 
+        name: 'Oatmeal', 
         iconPath: 'assets/icons/oat-bowl.svg', 
         boxColor: Color(0xffC588F2)
       )
