@@ -58,10 +58,48 @@ class HomePage extends StatelessWidget {
                 padding: EdgeInsets.only(left: 20, right: 20),
                 itemBuilder: (context, index) {
                   return Container(
-                    height: 100, 
+                    height: 80, 
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(popularDiets[index].iconPath)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 25, left: 30),
+                          child: SvgPicture.asset(
+                            popularDiets[index].iconPath,
+                            height: 55,
+                            width: 55)
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              popularDiets[index].name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: 14
+                              )
+                            ),
+                            Text(
+                              popularDiets[index].level + ' | ' + popularDiets[index].duration + ' | ' + popularDiets[index].calorie,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xff7B6F72),
+                                fontSize: 11
+                              )
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20),
+                          child: SvgPicture.asset(
+                            'assets/icons/button.svg',
+                            width: 25,
+                            height: 25
+                          ),
+                        ),
                       ],
                     ),
                     decoration: BoxDecoration(
